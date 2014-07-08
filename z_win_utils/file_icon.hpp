@@ -14,54 +14,63 @@
  ************************************************************************/
 #pragma once
 #include "win_utils_header.h"
-#include <string.h>
+#include <ShlObj.h>
 
 namespace zl
 {
 namespace WinUtils
 {
 
-    class ZLClipboard
+    class ZLFileIcon
     {
     public:
-        static BOOL SetClipboard(const char* pszData, const int nDataLen)
+        ZLFileIcon(HICON hIcon = NULL) : m_icon(hIcon) {}
+        virtual ~ZLFileIcon() { reset(); }
+        void reset()
         {
-            if (::OpenClipboard(NULL))
+            if (m_icon != NULL)
             {
-                ::EmptyClipboard();
-                HGLOBAL hMem = ::GlobalAlloc(GMEM_DDESHARE, nDataLen + 1);
-                if (hMem)
-                {
-                    char *buffer = (char *)::GlobalLock(hMem);
-                    strcpy(buffer, pszData);
-                    ::GlobalUnlock(hMem);
-                    ::SetClipboardData(CF_TEXT, hMem);
-                }
-                ::CloseClipboard();
+                ::DestroyIcon(m_icon);
+                m_icon = NULL;
+            }
+        }
+        BOOL Load(LPCTSTR szFilePath, BOOL bLargeIcon = TRUE)
+        {
+            reset();
+            BOOL bRet = FALSE;
+            SHFILEINFO fileInfo = {0};
+            DWORD dwStyle = SHGFI_ICON | SHGFI_USEFILEATTRIBUTES;
+            if (bLargeIcon)
+                dwStyle |= SHGFI_LARGEICON;
+            else
+                dwStyle |= SHGFI_SMALLICON;
+
+            if (::SHGetFileInfo(szFilePath, 0, &fileInfo, sizeof(fileInfo), dwStyle))
+            {
+                m_icon = fileInfo.hIcon;
+                bRet = TRUE;
+            }
+            return bRet;
+        }
+        BOOL LoadEx(LPCTSTR szFilePath, UINT uSize = 48, UINT uIndex = 0)
+        {
+            reset();
+            if (::SHDefExtractIcon(szFilePath, uIndex, 0, &m_icon, NULL, uSize) == S_OK)
+            {
                 return TRUE;
             }
-            return FALSE;
+            else
+            {
+                return FALSE;
+            }
+        }
+        HICON GetHandle()
+        {
+            return m_icon;
         }
 
-        static CStringA GetClipboard()
-        {
-            CStringA sText;
-            if (::IsClipboardFormatAvailable(CF_TEXT) && ::OpenClipboard(NULL))
-            {
-                HGLOBAL hMem = ::GetClipboardData(CF_TEXT);
-                if (hMem)
-                {
-                    LPSTR lpStr = (LPSTR)::GlobalLock(hMem);
-                    if (lpStr)
-                    {
-                        sText = lpStr;
-                        ::GlobalUnlock(hMem);
-                    }
-                }
-                ::CloseClipboard();
-            }
-            return sText;
-        }
+    protected:
+        HICON m_icon;
     };
 
 }

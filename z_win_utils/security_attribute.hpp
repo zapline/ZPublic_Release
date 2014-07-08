@@ -14,53 +14,61 @@
  ************************************************************************/
 #pragma once
 #include "win_utils_header.h"
-#include <string.h>
 
 namespace zl
 {
 namespace WinUtils
 {
 
-    class ZLClipboard
+    namespace ZLSecurityAttrabute
     {
-    public:
-        static BOOL SetClipboard(const char* pszData, const int nDataLen)
+        __inline PSECURITY_ATTRIBUTES CreateSecurityAttribute()
         {
-            if (::OpenClipboard(NULL))
+            BOOL bRet = FALSE;
+            PSECURITY_ATTRIBUTES psa = (PSECURITY_ATTRIBUTES)malloc(sizeof(SECURITY_ATTRIBUTES));
+            PSECURITY_DESCRIPTOR psd = (PSECURITY_DESCRIPTOR)malloc(SECURITY_DESCRIPTOR_MIN_LENGTH);
+
+            if (!psa || !psd)
+                goto cleanup;
+
+            bRet = ::InitializeSecurityDescriptor(psd, SECURITY_DESCRIPTOR_REVISION);
+            if (!bRet)
+                goto cleanup;
+
+            bRet = ::SetSecurityDescriptorDacl(psd, TRUE, NULL, FALSE);
+            if (!bRet)
+                goto cleanup;
+
+            psa->nLength = sizeof(SECURITY_ATTRIBUTES);
+            psa->bInheritHandle = TRUE;
+            psa->lpSecurityDescriptor = psd;
+cleanup:
+            if (!bRet)
             {
-                ::EmptyClipboard();
-                HGLOBAL hMem = ::GlobalAlloc(GMEM_DDESHARE, nDataLen + 1);
-                if (hMem)
+                if (psd)
                 {
-                    char *buffer = (char *)::GlobalLock(hMem);
-                    strcpy(buffer, pszData);
-                    ::GlobalUnlock(hMem);
-                    ::SetClipboardData(CF_TEXT, hMem);
+                    free(psd);
+                    psd = NULL;
                 }
-                ::CloseClipboard();
-                return TRUE;
+                if (psa)
+                {
+                    free(psa);
+                    psa = NULL;
+                }
             }
-            return FALSE;
+            return psa;
         }
 
-        static CStringA GetClipboard()
+        __inline void FreeSecurityAttribute(PSECURITY_ATTRIBUTES psa)
         {
-            CStringA sText;
-            if (::IsClipboardFormatAvailable(CF_TEXT) && ::OpenClipboard(NULL))
+            if (psa)
             {
-                HGLOBAL hMem = ::GetClipboardData(CF_TEXT);
-                if (hMem)
+                if (psa->lpSecurityDescriptor)
                 {
-                    LPSTR lpStr = (LPSTR)::GlobalLock(hMem);
-                    if (lpStr)
-                    {
-                        sText = lpStr;
-                        ::GlobalUnlock(hMem);
-                    }
+                    free(psa->lpSecurityDescriptor);
                 }
-                ::CloseClipboard();
+                free(psa);
             }
-            return sText;
         }
     };
 

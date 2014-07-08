@@ -14,54 +14,69 @@
  ************************************************************************/
 #pragma once
 #include "win_utils_header.h"
-#include <string.h>
 
 namespace zl
 {
 namespace WinUtils
 {
 
-    class ZLClipboard
+    class ZLModule
     {
     public:
-        static BOOL SetClipboard(const char* pszData, const int nDataLen)
+        ZLModule() : m_hDllModule(NULL) {}
+        ~ZLModule()
         {
-            if (::OpenClipboard(NULL))
-            {
-                ::EmptyClipboard();
-                HGLOBAL hMem = ::GlobalAlloc(GMEM_DDESHARE, nDataLen + 1);
-                if (hMem)
-                {
-                    char *buffer = (char *)::GlobalLock(hMem);
-                    strcpy(buffer, pszData);
-                    ::GlobalUnlock(hMem);
-                    ::SetClipboardData(CF_TEXT, hMem);
-                }
-                ::CloseClipboard();
-                return TRUE;
-            }
-            return FALSE;
+            Close();
         }
 
-        static CStringA GetClipboard()
+        void Attach(HMODULE hModule)
         {
-            CStringA sText;
-            if (::IsClipboardFormatAvailable(CF_TEXT) && ::OpenClipboard(NULL))
-            {
-                HGLOBAL hMem = ::GetClipboardData(CF_TEXT);
-                if (hMem)
-                {
-                    LPSTR lpStr = (LPSTR)::GlobalLock(hMem);
-                    if (lpStr)
-                    {
-                        sText = lpStr;
-                        ::GlobalUnlock(hMem);
-                    }
-                }
-                ::CloseClipboard();
-            }
-            return sText;
+            Close();
+            m_hDllModule = hModule;
         }
+
+        HMODULE Detach()
+        {
+            HMODULE hModule = m_hDllModule;
+            m_hDllModule = NULL;
+            return hModule;
+        }
+
+        operator HMODULE()
+        {
+            return m_hDllModule;
+        }
+        HMODULE GetModule()
+        {
+            return m_hDllModule;
+        }
+
+        void Close()
+        {
+            if (m_hDllModule)
+            {
+                ::FreeLibrary(m_hDllModule);
+                m_hDllModule = NULL;
+            }
+        }
+        BOOL Load(LPCTSTR szDllName)
+        {
+            Close();
+            m_hDllModule = ::LoadLibrary(szDllName);
+            if (!m_hDllModule)
+                return FALSE;
+            return TRUE;
+        }
+
+        void* GetProc(LPCSTR szFuncName)
+        {
+            if (!m_hDllModule)
+                return NULL;
+            return ::GetProcAddress(m_hDllModule, szFuncName);
+        }
+
+    private:
+        HMODULE m_hDllModule;
     };
 
 }

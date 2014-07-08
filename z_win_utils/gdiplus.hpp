@@ -14,54 +14,55 @@
  ************************************************************************/
 #pragma once
 #include "win_utils_header.h"
-#include <string.h>
 
 namespace zl
 {
 namespace WinUtils
 {
 
-    class ZLClipboard
+    class ZLGdiPlusInit
     {
-    public:
-        static BOOL SetClipboard(const char* pszData, const int nDataLen)
+        class Inst
         {
-            if (::OpenClipboard(NULL))
+        public:
+            Inst():m_bInit(false)
             {
-                ::EmptyClipboard();
-                HGLOBAL hMem = ::GlobalAlloc(GMEM_DDESHARE, nDataLen + 1);
-                if (hMem)
-                {
-                    char *buffer = (char *)::GlobalLock(hMem);
-                    strcpy(buffer, pszData);
-                    ::GlobalUnlock(hMem);
-                    ::SetClipboardData(CF_TEXT, hMem);
-                }
-                ::CloseClipboard();
-                return TRUE;
-            }
-            return FALSE;
-        }
 
-        static CStringA GetClipboard()
-        {
-            CStringA sText;
-            if (::IsClipboardFormatAvailable(CF_TEXT) && ::OpenClipboard(NULL))
-            {
-                HGLOBAL hMem = ::GetClipboardData(CF_TEXT);
-                if (hMem)
-                {
-                    LPSTR lpStr = (LPSTR)::GlobalLock(hMem);
-                    if (lpStr)
-                    {
-                        sText = lpStr;
-                        ::GlobalUnlock(hMem);
-                    }
-                }
-                ::CloseClipboard();
             }
-            return sText;
+            void Init()
+            {
+                if (m_bInit)
+                {
+                    return ;
+                }
+                Gdiplus::GdiplusStartup(&m_gpToken,  &m_gpInput,  NULL); 
+                m_bInit = true;
+            }
+            void UnInit()
+            {
+                if (!m_bInit)
+                {
+                    return ;
+                }
+                Gdiplus::GdiplusShutdown(m_gpToken);
+                m_bInit = false;
+            }
+        protected:
+            bool m_bInit;
+            GdiplusStartupInput m_gpInput; 
+            ULONG_PTR           m_gpToken; 
+        };
+    public:
+        GdiPlusAutoInit()
+        {
+            m_GdiPlusInit.Init();
         }
+        ~GdiPlusAutoInit()
+        {
+            m_GdiPlusInit.UnInit();
+        }
+    protected:
+        ZLGdiPlusInit m_GdiPlusInit;
     };
 
 }

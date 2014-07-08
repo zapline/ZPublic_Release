@@ -14,53 +14,40 @@
  ************************************************************************/
 #pragma once
 #include "win_utils_header.h"
-#include <string.h>
 
 namespace zl
 {
 namespace WinUtils
 {
 
-    class ZLClipboard
+    class ZLScreen
     {
     public:
-        static BOOL SetClipboard(const char* pszData, const int nDataLen)
+        static void GetScreenResolution(int& width, int& height)
         {
-            if (::OpenClipboard(NULL))
-            {
-                ::EmptyClipboard();
-                HGLOBAL hMem = ::GlobalAlloc(GMEM_DDESHARE, nDataLen + 1);
-                if (hMem)
-                {
-                    char *buffer = (char *)::GlobalLock(hMem);
-                    strcpy(buffer, pszData);
-                    ::GlobalUnlock(hMem);
-                    ::SetClipboardData(CF_TEXT, hMem);
-                }
-                ::CloseClipboard();
-                return TRUE;
-            }
-            return FALSE;
+            width = ::GetSystemMetrics(SM_CXSCREEN);
+            height = ::GetSystemMetrics(SM_CYSCREEN);
         }
 
-        static CStringA GetClipboard()
+        static BOOL SetScreenResolution(int width, int height, int BitsPerPel = 32)
         {
-            CStringA sText;
-            if (::IsClipboardFormatAvailable(CF_TEXT) && ::OpenClipboard(NULL))
+            DEVMODE lpDevMode;
+            lpDevMode.dmBitsPerPel  = 32;
+            lpDevMode.dmPelsWidth   = width;
+            lpDevMode.dmPelsHeight  = height;
+            lpDevMode.dmSize        = sizeof(lpDevMode);
+            lpDevMode.dmFields      = DM_PELSWIDTH | DM_PELSHEIGHT | DM_BITSPERPEL;
+            LONG result = ::ChangeDisplaySettings(&lpDevMode,0);
+            if (result == DISP_CHANGE_SUCCESSFUL)
             {
-                HGLOBAL hMem = ::GetClipboardData(CF_TEXT);
-                if (hMem)
-                {
-                    LPSTR lpStr = (LPSTR)::GlobalLock(hMem);
-                    if (lpStr)
-                    {
-                        sText = lpStr;
-                        ::GlobalUnlock(hMem);
-                    }
-                }
-                ::CloseClipboard();
+                ::ChangeDisplaySettings(&lpDevMode, CDS_UPDATEREGISTRY);
+                return TRUE;
             }
-            return sText;
+            else
+            {
+                ::ChangeDisplaySettings(NULL,0);
+                return FALSE;
+            }
         }
     };
 
