@@ -12,6 +12,13 @@
  *               Website: https://github.com/zpublic/zpublic             *
  *                                                                       *
  ************************************************************************/
+
+/**
+ * @file
+ * @brief 文件图标相关
+ */
+
+
 #pragma once
 #include "win_utils_header.h"
 #include <ShlObj.h>
@@ -20,7 +27,9 @@ namespace zl
 {
 namespace WinUtils
 {
-
+    /**
+     * @brief 文件图标相关
+     */
     class ZLFileIcon
     {
     public:
@@ -34,6 +43,13 @@ namespace WinUtils
                 m_icon = NULL;
             }
         }
+
+        /**
+         * @brief 加载文件图标
+         * @param[in] szFilePath 文件路径
+         * @param[in] bLargeIcon 是否为大图标，默认TRUE
+         * @return 成功返回TRUE，失败返回FALSE
+         */
         BOOL Load(LPCTSTR szFilePath, BOOL bLargeIcon = TRUE)
         {
             reset();
@@ -52,6 +68,14 @@ namespace WinUtils
             }
             return bRet;
         }
+
+        /**
+         * @brief 加载文件图标
+         * @param[in] szFilePath 文件路径
+         * @param[in] uSize      图标的大小
+         * @param[in] uIndex     图标下标
+         * @return 成功返回TRUE，失败返回FALSE
+         */
         BOOL LoadEx(LPCTSTR szFilePath, UINT uSize = 48, UINT uIndex = 0)
         {
             reset();
@@ -64,6 +88,11 @@ namespace WinUtils
                 return FALSE;
             }
         }
+
+        /**
+         * @brief 取得图标句柄
+         * @return 返回图标的句柄(HICON)
+         */
         HICON GetHandle()
         {
             return m_icon;

@@ -12,6 +12,13 @@
  *               Website: https://github.com/zpublic/zpublic             *
  *                                                                       *
  ************************************************************************/
+
+/**
+ * @file
+ * @brief 错误码相关
+ */
+
+
 #pragma once
 #include "win_utils_header.h"
 
@@ -19,11 +26,18 @@ namespace zl
 {
 namespace WinUtils
 {
-
+    /**
+     * @brief 错误码相关
+     */
     class ZLErrorCode
     {
     public:
-        ///> need LocalFree(pBuffer);
+        /**
+         * @brief 获得错误码对应的文本描述信息
+         * @param[in] dwErrCode 错误码
+         * @return 成功返回错误码对应的描述信息，失败返回NULL
+         * @note 必须调用LocalFree函数,对返回的缓冲区指针进行释放
+         */
         static LPTSTR GetFormattedMessage(DWORD dwErrCode = ::GetLastError())
         {
             LPTSTR lpMsgBuf = NULL;

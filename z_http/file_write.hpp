@@ -13,38 +13,57 @@
  *                                                                       *
  ************************************************************************/
 
-/**
- * @file
- * @brief 内存相关
- */
-
-
 #pragma once
-#include "win_utils_header.h"
-#include "register.hpp"
+#include "z_http_interface.h"
 
 namespace zl
 {
-namespace WinUtils
-{
-    /**
-     * @brief 获取内存大小
-     */
-    class ZLMemory
+    namespace http
     {
-    public:
-        /**
-         * @brief 获取内存大小，以MB为单位
-         * @return 成功返回内存大小(MB)
-         */
-        static ULONG GetMemorySize()
+        class ZLFileWrite : public ICurlWrite
         {
-            MEMORYSTATUSEX statex = {0};
-            statex.dwLength = sizeof(statex);
-            ::GlobalMemoryStatusEx(&statex);
-            return (ULONG)((statex.ullTotalPhys) / (1024 * 1024));
-        }
-    };
+        public:
+            ZLFileWrite(LPCTSTR szPath)
+            {
+                m_pFile = NULL;
+                m_nLength = 0;
+                _tfopen_s(&m_pFile, szPath, _T("wb"));
+            }
 
-}
+            virtual ~ZLFileWrite()
+            {
+                if (m_pFile)
+                {
+                    fclose(m_pFile);
+                    m_pFile = NULL;
+                    m_nLength = 0;
+                }
+            }
+
+            virtual int Write(BYTE *pData, int nLength)
+            {
+                if (m_pFile)
+                    fwrite(pData, 1, nLength, m_pFile);
+
+                m_nLength += nLength;
+                return nLength;
+            }
+
+            virtual const BYTE* GetData()
+            {
+                return NULL;
+            }
+
+            virtual int GetLength()
+            {
+                return m_nLength;
+            }
+
+        private:
+            ZLFileWrite() {}
+
+            int m_nLength;
+            FILE *m_pFile;
+        };
+    }
 }

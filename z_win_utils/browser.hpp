@@ -12,6 +12,13 @@
  *               Website: https://github.com/zpublic/zpublic             *
  *                                                                       *
  ************************************************************************/
+
+/**
+ * @file
+ * @brief 浏览器相关
+ */
+
+
 #pragma once
 #include "win_utils_header.h"
 #include "system_path.hpp"
@@ -21,11 +28,17 @@ namespace zl
 {
 namespace WinUtils
 {
-
+    /**
+     * @brief 浏览器相关
+     */
     class ZLBrowser
     {
     public:
-        ///> 是否是主动打开浏览器
+        /**
+         * @brief 判断是否是用户打开浏览器
+         * @param[in] lpParentProcess 父进程路径
+         * @return 成功返回TRUE,失败FALSE
+         */
         static BOOL IsUserLaunchBrowser(LPCTSTR lpParentProcess)
         {
             if (!lpParentProcess)
@@ -36,7 +49,11 @@ namespace WinUtils
             return (sExplorer.CollateNoCase(lpParentProcess) == 0);
         }
 
-        ///>  获取默认浏览器
+        /**
+         * @brief 获取默认浏览器
+         * @param[out] strDefaultBrowser 返回的默认浏览器路径
+         * @return 成功返回TRUE,失败FALSE
+         */
         static BOOL GetDefaultBrowser(CString& strDefaultBrowser)
         {
             BOOL bResult = FALSE;
@@ -45,7 +62,7 @@ namespace WinUtils
             HRESULT hResult = E_FAIL;
             CComPtr<IQueryAssociations> pQa;
 
-            hResult = AssocCreate(CLSID_QueryAssociations, IID_IQueryAssociations, (LPVOID*)&pQa);
+            hResult = ::AssocCreate(CLSID_QueryAssociations, IID_IQueryAssociations, (LPVOID*)&pQa);
             if (FAILED(hResult) || !pQa)
             {goto _abort;}
 
@@ -84,7 +101,10 @@ _abort:
             return bResult;
         }
 
-        // 获取IE版本
+        /**
+         * @brief 获取IE版本
+         * @return 返回版本号, 失败为0
+         */
         static unsigned int GetIEMajorVersion()
         {
             static unsigned int s_version = UINT_MAX;

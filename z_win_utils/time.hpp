@@ -12,6 +12,13 @@
  *               Website: https://github.com/zpublic/zpublic             *
  *                                                                       *
  ************************************************************************/
+
+/**
+ * @file
+ * @brief 时间相关
+ */
+
+
 #pragma once
 #include "win_utils_header.h"
 
@@ -19,10 +26,17 @@ namespace zl
 {
 namespace WinUtils
 {
-
+    /**
+     * @brief 时间相关操作
+     */
     class ZLTime
     {
     public:
+        /**
+         * @brief __time64_t到FileTime的转化
+         * @param[in] tm __time64_t
+         * @return 成功返回FILETIME
+         */
         static FILETIME Time642FileTime(const __time64_t& tm)
         {
             FILETIME ft;
@@ -32,7 +46,11 @@ namespace WinUtils
             ft.dwHighDateTime = (DWORD)(ll >> 32);
             return ft;
         }
-
+        /**
+         * @brief FileTime到__time64_t的转化
+         * @param[in] pft FILETIME结构体指针
+         * @return 返回__time64_t
+         */
         static __time64_t FileTime2Time64(const FILETIME& pft)
         {
             __time64_t cTime = pft.dwHighDateTime;
@@ -63,7 +81,12 @@ namespace WinUtils
             ::GetSystemTime(&st);
             return st;
         }
-
+        /**
+         * @brief 计算TimeInterval
+         * @param[in]  llTimeBegin    开始时间
+         * @param[out] dfTimeInterval TimeInterval
+         * @return 成功返回TRUE，失败返回FALSE
+         */
         static BOOL Calc( LARGE_INTEGER& llTimeBegin, double& dfTimeInterval )
         {
             LARGE_INTEGER freq = {0};

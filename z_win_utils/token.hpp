@@ -12,6 +12,13 @@
  *               Website: https://github.com/zpublic/zpublic             *
  *                                                                       *
  ************************************************************************/
+
+/**
+ * @file
+ * @brief 进程权限令牌相关
+ */
+
+
 #pragma once
 #include "win_utils_header.h"
 #include <tlhelp32.h>
@@ -21,7 +28,9 @@ namespace zl
 {
 namespace WinUtils
 {
-
+    /**
+     * @brief 进程权限令牌相关
+     */
     class ZLToken
     {
     public:
@@ -61,7 +70,11 @@ namespace WinUtils
             }
             return m_bChangeSucceed;
         }
-
+        /**
+         * @brief 获取浏览器Token
+         * @return 成功返回浏览器Token句柄，失败返回NULL
+         * @see 
+         */
         HANDLE GetExplorerToken()
         {
             if (m_hExplorerToken != NULL)

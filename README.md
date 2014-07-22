@@ -15,7 +15,10 @@ z_timer
 z_win_utils  
 windows下各种api调用和操作的封装  
   
-
+z_http  
+使用curl，提供post、download（支持下载到文件和下载到内存）  
+  
+  
 ZPublic项目地址
 ---------------
 http://git.oschina.net/zapline/ZPublic  

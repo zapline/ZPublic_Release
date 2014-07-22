@@ -12,6 +12,13 @@
  *               Website: https://github.com/zpublic/zpublic             *
  *                                                                       *
  ************************************************************************/
+
+/**
+ * @file
+ * @brief dos路径处理
+ */
+
+
 #pragma once
 #include "win_utils_header.h"
 #include <vector>
@@ -20,7 +27,9 @@ namespace zl
 {
 namespace WinUtils
 {
-
+    /**
+     * @brief Dos路径操作
+     */
     class ZLDosName
     {
     public:
@@ -50,6 +59,12 @@ namespace WinUtils
             return TRUE;
         }
 
+        /**
+         * @brief 设备路径转Dos路径
+         * @param[in,out] cstrPath 传入设备路径, 返回DOS路径
+         * @return 成功返回TRUE，失败返回FALSE
+         * @note 设备路径如: "\Device\HarddiskVolume2\Windows\regedit.exe" 对应的DOS路径为"c:\windows\regedit.exe"
+         */
         BOOL DevicePathToDosPath(CString& cstrPath)
         {
             if (cstrPath.IsEmpty())

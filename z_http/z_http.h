@@ -13,38 +13,14 @@
  *                                                                       *
  ************************************************************************/
 
-/**
- * @file
- * @brief 内存相关
- */
-
-
 #pragma once
-#include "win_utils_header.h"
-#include "register.hpp"
 
-namespace zl
-{
-namespace WinUtils
-{
-    /**
-     * @brief 获取内存大小
-     */
-    class ZLMemory
-    {
-    public:
-        /**
-         * @brief 获取内存大小，以MB为单位
-         * @return 成功返回内存大小(MB)
-         */
-        static ULONG GetMemorySize()
-        {
-            MEMORYSTATUSEX statex = {0};
-            statex.dwLength = sizeof(statex);
-            ::GlobalMemoryStatusEx(&statex);
-            return (ULONG)((statex.ullTotalPhys) / (1024 * 1024));
-        }
-    };
-
-}
-}
+#include "z_http_def.h"
+#include "z_http_header.h"
+#include "z_http_interface.h"
+#include "stream_writter.hpp"
+#include "mem_write.hpp"
+#include "file_write.hpp"
+#include "ie_proxy.hpp"
+#include "simple_curl.hpp"
+#include "http_client.hpp"

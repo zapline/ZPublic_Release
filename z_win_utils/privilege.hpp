@@ -12,6 +12,13 @@
  *               Website: https://github.com/zpublic/zpublic             *
  *                                                                       *
  ************************************************************************/
+
+/**
+ * @file
+ * @brief 进程权限相关
+ */
+
+
 #pragma once
 #include "win_utils_header.h"
 
@@ -19,11 +26,19 @@ namespace zl
 {
 namespace WinUtils
 {
-
+    /**
+     * @brief 调整进程权限
+     */
     class ZLPrivilege
     {
     public:
-        static HRESULT GetPrivileges(LPCTSTR szPrivileges = SE_DEBUG_NAME)
+        /**
+        * @brief 调整当前进程权限
+        * @param[in] szPrivileges 权限名
+        * @return 成功返回TRUE，失败返回FALSE
+        * @see OpenProcessToken LookupPrivilegeValue AdjustTokenPrivileges
+        */
+        static BOOL GetPrivileges(LPCTSTR szPrivileges = SE_DEBUG_NAME)
         {
             BOOL bRet = FALSE;
             HANDLE hToken = NULL;

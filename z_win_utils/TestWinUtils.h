@@ -39,6 +39,7 @@ public:
         TEST_ADD(CTestWinUtils::test_browser);
         TEST_ADD(CTestWinUtils::test_uuid);
         TEST_ADD(CTestWinUtils::test_acl);
+        TEST_ADD(CTestWinUtils::test_disk)
     }
 
     void test_path()
@@ -507,7 +508,33 @@ public:
 
     void test_dos_name()
     {
-        CString cstrTestPaht(L"\\Device\\HarddiskVolume2\\Windows\\SysWOW64\\notepad.exe");
+        static const int LOGICAL_DRIVE_NAME_LEN = 4;
+        static const int MAX_LOGICAL_DRIVE_LENGTH = (LOGICAL_DRIVE_NAME_LEN * 26 + 1);
+        TCHAR szDevicesName[MAX_LOGICAL_DRIVE_LENGTH + 1] ={0};
+        int nLen = ::GetLogicalDriveStrings(MAX_LOGICAL_DRIVE_LENGTH, szDevicesName);
+        TEST_ASSERT(nLen != 0);
+
+        int nCount = nLen / LOGICAL_DRIVE_NAME_LEN;
+        TCHAR szTargetPath[MAX_PATH + 1] = {0};
+        TCHAR *szCurrentDevice = szDevicesName;
+        CString cstrTestPaht;
+        szTargetPath[MAX_PATH] = '\0';
+
+        for (int i = 0; i < nCount; i++)
+        {
+            szCurrentDevice[2] = '\0';
+            if(::QueryDosDevice(szCurrentDevice, szTargetPath, MAX_PATH))
+            {
+                if (_tcsicmp(szCurrentDevice, L"C:") == 0)
+                {
+                    cstrTestPaht = szTargetPath;
+                    break;
+                }
+            }
+            szCurrentDevice += LOGICAL_DRIVE_NAME_LEN;
+        }
+
+        cstrTestPaht += _T("\\Windows\\regedit.exe");
         ZLDosName dosname;
         TEST_ASSERT(dosname.Init());
         TEST_ASSERT(dosname.DevicePathToDosPath(cstrTestPaht));
@@ -738,5 +765,16 @@ public:
         TEST_ASSERT(acl.Open(ZLSystemPath::GetCommonAppDataDir() + L"\\zpublic_test\\acl", SE_FILE_OBJECT) == TRUE);
         TEST_ASSERT(acl.SetSecurity(L"Users", KEY_ALL_ACCESS, DENY_ACCESS) == TRUE);
         TEST_ASSERT(acl.SetSecurity(L"Users") == TRUE);
+    }
+
+    void test_disk()
+    {
+        vecDisk diskList;
+        TEST_ASSERT(ZLDisk::GetAllDiskSign(diskList) == TRUE);
+        TEST_ASSERT(!diskList.empty() == TRUE);
+        CString cstrSysSign = ZLSystemPath::GetWindowsDir();
+        ZLPath::PathRemoveBackslash(cstrSysSign);
+        ZLPath::PathRemoveFileSpec(cstrSysSign);
+        TEST_ASSERT(ZLDisk::IsFixedDisk(cstrSysSign) == TRUE);
     }
 };

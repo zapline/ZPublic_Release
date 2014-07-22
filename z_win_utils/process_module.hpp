@@ -12,6 +12,12 @@
  *               Website: https://github.com/zpublic/zpublic             *
  *                                                                       *
  ************************************************************************/
+
+/**
+ * @file
+ * @brief 进程的模块枚举
+ */
+
 #pragma once
 #include "win_utils_header.h"
 #include "privilege.hpp"
@@ -44,10 +50,18 @@ namespace WinUtils
     }ZLModuleEnumInfo;
 
     typedef std::vector<ZLModuleEnumInfo> ZLModuleEnumInfoVec;
-
+    /**
+     * @brief 进程模块枚举
+     */
     class ZLProcessModule
     {
     public:
+        /**
+         * @brief 枚举指定进程的模块
+         * @param[in] dwPid   进程ID
+         * @param[in] InfoVec 存放进程信息的容器
+         * @return 成功返回TRUE，失败返回FALSE
+         */
         static BOOL Enum(DWORD dwPid, ZLModuleEnumInfoVec& InfoVec)
         {
             InfoVec.clear();

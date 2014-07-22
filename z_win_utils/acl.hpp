@@ -12,6 +12,13 @@
  *               Website: https://github.com/zpublic/zpublic             *
  *                                                                       *
  ************************************************************************/
+
+/**
+ * @file
+ * @brief 访问控制列表相关
+ */
+
+
 #pragma once
 #include "win_utils_header.h"
 #include <Aclapi.h>
@@ -21,7 +28,9 @@ namespace zl
 {
 namespace WinUtils
 {
-
+    /**
+     * @brief 提供对安全描述符的读取和设置操作
+     */
     class ZLAcl
     {
     public:
@@ -41,6 +50,13 @@ namespace WinUtils
         }
 
     public:
+        /**
+         * @brief 获取对象安全描述符
+         * @param[in] cstrObjcetName 对象名
+         * @param[in] enumObjectType 对象类型
+         * @param[in] SecurityInfo   获取安全信息的类型
+         * @return 成功返回TRUE，失败返回FALSE
+         */
         BOOL Open(const CString& cstrObjcetName,
             SE_OBJECT_TYPE enumObjectType,
             SECURITY_INFORMATION SecurityInfo = DACL_SECURITY_INFORMATION)
@@ -66,7 +82,14 @@ namespace WinUtils
             bIsOpen_ = TRUE;
             return TRUE;
         }
-
+        /**
+         * @brief 设置对象安全描述符
+         * @param[in] cstrUserName        name of the trustee
+         * @param[in] dwAccessPermissions 访问权限
+         * @param[in] enumAccessMode      访问模式
+         * @param[in] dwInheritance       继承类型
+         * @return 成功返回TRUE，失败返回FALSE
+         */
         BOOL SetSecurity(const CString& cstrUserName,
             DWORD dwAccessPermissions = KEY_ALL_ACCESS,
             ACCESS_MODE enumAccessMode = SET_ACCESS,

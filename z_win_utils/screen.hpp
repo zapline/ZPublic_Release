@@ -12,6 +12,15 @@
  *               Website: https://github.com/zpublic/zpublic             *
  *                                                                       *
  ************************************************************************/
+
+/**
+ * @file
+ * @brief 屏幕相关
+ * 
+ *      屏幕分辨率设置等.
+ */
+
+
 #pragma once
 #include "win_utils_header.h"
 
@@ -19,16 +28,31 @@ namespace zl
 {
 namespace WinUtils
 {
-
+    /**
+     * @brief 屏幕分辨率设置
+     */
     class ZLScreen
     {
     public:
+        /**
+         * @brief 获取屏幕宽高
+         * @param[out] width  宽
+         * @param[out] height 高
+         * @see GetSystemMetrics
+         */
         static void GetScreenResolution(int& width, int& height)
         {
             width = ::GetSystemMetrics(SM_CXSCREEN);
             height = ::GetSystemMetrics(SM_CYSCREEN);
         }
-
+        /**
+         * @brief 设置屏幕宽高
+         * @param[in] width      宽
+         * @param[in] height     高
+         * @param[in] BitsPerPel 每像素的比特数
+         * @return 成功返回TRUE，失败返回FALSE
+         * @see ChangeDisplaySettings
+         */
         static BOOL SetScreenResolution(int width, int height, int BitsPerPel = 32)
         {
             DEVMODE lpDevMode;

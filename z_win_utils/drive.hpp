@@ -12,6 +12,13 @@
  *               Website: https://github.com/zpublic/zpublic             *
  *                                                                       *
  ************************************************************************/
+
+/**
+ * @file
+ * @brief 磁盘驱动器相关
+ */
+
+
 #pragma once
 #include "win_utils_header.h"
 #include <Winioctl.h>
@@ -20,11 +27,16 @@ namespace zl
 {
 namespace WinUtils
 {
-
+    /**
+     * @brief 磁盘驱动器相关
+     */
     class ZLDrive
     {
     public:
-        ///> GB
+        /**
+         * @brief 获取硬盘大小，以GB为单位
+         * @return 硬盘大小
+         */
         static ULONG GetDriveSize()
         {
             ULONG uSize = 0;

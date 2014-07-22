@@ -12,6 +12,13 @@
  *               Website: https://github.com/zpublic/zpublic             *
  *                                                                       *
  ************************************************************************/
+
+/**
+ * @file
+ * @brief 任务栏位置
+ */
+
+
 #pragma once
 #include "win_utils_header.h"
 
@@ -29,7 +36,11 @@ namespace WinUtils
         TaskballPositionBottom,
         TaskballPositionHide
     };
-
+        /**
+         * @brief 获取任务栏的位置
+         * @return 成功返回任务栏的位置
+         * @see SystemParametersInfo
+         */
     static emTaskbarPosition GetTaskbarPosition()
     {
         RECT rcWA;

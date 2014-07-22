@@ -12,6 +12,13 @@
  *               Website: https://github.com/zpublic/zpublic             *
  *                                                                       *
  ************************************************************************/
+
+/**
+ * @file
+ * @brief 进程枚举
+ */
+
+
 #pragma once
 #include "win_utils_header.h"
 #include "privilege.hpp"
@@ -38,10 +45,17 @@ namespace WinUtils
     }ZLProcessEnumInfo;
 
     typedef std::vector<ZLProcessEnumInfo> ZLProcessEnumInfoVec;
-
+    /**
+     * @brief 进程枚举
+     */
     class ZLProcessEnum
     {
     public:
+        /**
+         * @brief 枚举所有进程
+         * @param[in,out] infoVec 存放所有进程信息的容器
+         * @return 成功返回TRUE，失败返回FALSE
+         */
         static BOOL Enum(ZLProcessEnumInfoVec& infoVec)
         {
             infoVec.clear();

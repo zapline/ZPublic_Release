@@ -12,6 +12,13 @@
  *               Website: https://github.com/zpublic/zpublic             *
  *                                                                       *
  ************************************************************************/
+
+/**
+ * @file
+ * @brief 窗口消息相关
+ */
+
+
 #pragma once
 #include "win_utils_header.h"
 
@@ -19,8 +26,10 @@ namespace zl
 {
 namespace WinUtils
 {
-
-    namespace ZLMessage
+    /**
+     * @brief UIPI消息过滤器相关操作
+     */
+    class ZLMessage
     {
         inline UINT RegisterMessage(LPCTSTR lpMsgName)
         {
@@ -31,6 +40,13 @@ namespace WinUtils
     #define MSGFLT_ADD		1	// ChangeWindowMessageFilter 函数的第二个参数，添加消息
     #define MSGFLT_REMOVE	2	// ChangeWindowMessageFilter 函数的第二个参数，移除消息
 
+        /**
+         * @brief 从UIPI消息过滤器，添加或删除一条消息
+         * @param[in] uMsg   指定向过滤器添加或从过滤器删除的指定消息
+         * @param[in] dwOper 指定操作类型
+         * @return 成功返回TRUE，失败返回FALSE
+         * @see ChangeWindowMessageFilter
+         */
         static BOOL ChangeMessageFilter(UINT uMsg, DWORD dwOper = MSGFLT_ADD)
         {
             BOOL bRet = FALSE;
@@ -49,7 +65,7 @@ namespace WinUtils
     Exit0:
             return bRet;
         }
-    }
+    };
 
 
 }

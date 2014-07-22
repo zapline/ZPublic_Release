@@ -12,6 +12,13 @@
  *               Website: https://github.com/zpublic/zpublic             *
  *                                                                       *
  ************************************************************************/
+
+/**
+ * @file
+ * @brief gdiplus初始化相关
+ */
+
+
 #pragma once
 #include "win_utils_header.h"
 
@@ -19,7 +26,9 @@ namespace zl
 {
 namespace WinUtils
 {
-
+    /**
+     * @brief gdiplus初始化相关操作
+     */
     class ZLGdiPlusInit
     {
         class Inst

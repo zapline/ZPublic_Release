@@ -13,38 +13,50 @@
  *                                                                       *
  ************************************************************************/
 
-/**
- * @file
- * @brief 内存相关
- */
-
-
 #pragma once
-#include "win_utils_header.h"
-#include "register.hpp"
+#include "stream_writter.hpp"
+#include "z_http_interface.h"
 
 namespace zl
 {
-namespace WinUtils
-{
-    /**
-     * @brief 获取内存大小
-     */
-    class ZLMemory
+    namespace http
     {
-    public:
-        /**
-         * @brief 获取内存大小，以MB为单位
-         * @return 成功返回内存大小(MB)
-         */
-        static ULONG GetMemorySize()
+        class ZLMemWrite : public ICurlWrite
         {
-            MEMORYSTATUSEX statex = {0};
-            statex.dwLength = sizeof(statex);
-            ::GlobalMemoryStatusEx(&statex);
-            return (ULONG)((statex.ullTotalPhys) / (1024 * 1024));
-        }
-    };
+        public:
+            ZLMemWrite()
+            {
 
-}
+            }
+
+            virtual ~ZLMemWrite()
+            {
+
+            }
+
+            virtual int Write(BYTE *pData, int nLength)
+            {
+                m_stream.WriteBinary(pData, nLength);
+                return nLength;
+            }
+
+            virtual const BYTE* GetData()
+            {
+                return (const BYTE*)m_stream.GetStream();
+            }
+
+            virtual int GetLength()
+            {
+                return m_stream.GetSize();
+            }
+
+            ZLStreamWriter& GetStreamWriter()
+            {
+                return m_stream;
+            }
+
+        private:
+            ZLStreamWriter m_stream;
+        };
+    }
 }

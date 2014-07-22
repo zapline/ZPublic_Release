@@ -12,6 +12,13 @@
  *               Website: https://github.com/zpublic/zpublic             *
  *                                                                       *
  ************************************************************************/
+
+/**
+ * @file
+ * @brief ini文件操作
+ */
+
+
 #pragma once
 #pragma warning(disable:4996)
 
@@ -28,6 +35,9 @@ namespace zl
 namespace WinUtils
 {
 
+    /**
+     * ini文件处理
+     */
     class ZLIni
     {
     private:

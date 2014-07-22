@@ -12,6 +12,13 @@
  *               Website: https://github.com/zpublic/zpublic             *
  *                                                                       *
  ************************************************************************/
+
+/**
+ * @file
+ * @brief 动态运行库相关
+ */
+
+
 #pragma once
 #include "win_utils_header.h"
 
@@ -19,7 +26,9 @@ namespace zl
 {
 namespace WinUtils
 {
-
+    /**
+     * @brief 提供对动态运行库的相关操作
+     */
     class ZLModule
     {
     public:
@@ -59,6 +68,13 @@ namespace WinUtils
                 m_hDllModule = NULL;
             }
         }
+                
+        /**
+         * @brief 可执行模块映射到调用进程的地址空间
+         * @param[in] szDllName 可执行模块名
+         * @return 成功TRUE，失败返回FALSE
+         * @see LoadLibrary
+         */
         BOOL Load(LPCTSTR szDllName)
         {
             Close();
@@ -67,7 +83,12 @@ namespace WinUtils
                 return FALSE;
             return TRUE;
         }
-
+        /**
+         * @brief 获取函数名的地址
+         * @param[in]szFuncName 函数名
+         * @return 成功，返回导入库的函数地址，失败返回NULL
+         * @see GetProcAddress
+         */
         void* GetProc(LPCSTR szFuncName)
         {
             if (!m_hDllModule)

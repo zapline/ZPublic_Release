@@ -12,6 +12,13 @@
  *               Website: https://github.com/zpublic/zpublic             *
  *                                                                       *
  ************************************************************************/
+
+/**
+ * @file
+ * @brief 计时器
+ */
+
+
 #pragma once
 #include "win_utils_header.h"
 
@@ -26,6 +33,13 @@ namespace WinUtils
         int    nPause;
     }ZL_TICK_COUNTER;
 
+    /**
+     * @brief 计时器操作
+     * @par Example:
+     * @code
+     * 
+     * @endcode
+     */
     class ZLTickCounter
     {
     public:
@@ -33,10 +47,12 @@ namespace WinUtils
         {
             reset();
             //获取每秒多少CPU Performance Tick  
-            ::QueryPerformanceFrequency(&m_liFreq);  
+            ::QueryPerformanceFrequency(&m_liFreq);
         }
 
-        // 开始计时
+        /**
+         * @brief 开始计时
+         */
         void Start()
         {
             reset();
@@ -44,7 +60,9 @@ namespace WinUtils
             Entry();
         }
 
-        // 返回计时时间、总时间、暂停计时的次数（时间单位毫秒）
+        /**
+         * @brief 停止计时,返回计时时间、总时间、暂停计时的次数（时间单位毫秒）
+         */
         void Stop(ZL_TICK_COUNTER& tickCounterInfo)
         {
             Leave();

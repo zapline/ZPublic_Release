@@ -12,6 +12,13 @@
  *               Website: https://github.com/zpublic/zpublic             *
  *                                                                       *
  ************************************************************************/
+
+/**
+ * @file
+ * @brief 剪切板操作相关
+ */
+
+
 #pragma once
 #include "win_utils_header.h"
 #include <string.h>
@@ -20,10 +27,18 @@ namespace zl
 {
 namespace WinUtils
 {
-
+    /**
+     * @brief 提供对剪切板数据的设置、读取操作
+     */
     class ZLClipboard
     {
     public:
+        /**
+         * @brief 设置剪切板内容
+         * @param[in] pszData  指向缓冲区的指针
+         * @param[in] nDataLen 缓冲区长度
+         * @return 成功返回TRUE，失败返回FALSE
+         */
         static BOOL SetClipboard(const char* pszData, const int nDataLen)
         {
             if (::OpenClipboard(NULL))
@@ -43,6 +58,10 @@ namespace WinUtils
             return FALSE;
         }
 
+        /**
+         * @brief 读取剪切板内容
+         * @return 剪切板内容,失败为空
+         */
         static CStringA GetClipboard()
         {
             CStringA sText;

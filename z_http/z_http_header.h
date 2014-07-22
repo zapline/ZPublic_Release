@@ -13,38 +13,29 @@
  *                                                                       *
  ************************************************************************/
 
-/**
- * @file
- * @brief 内存相关
- */
-
 
 #pragma once
-#include "win_utils_header.h"
-#include "register.hpp"
+#include <windows.h>
 
-namespace zl
-{
-namespace WinUtils
-{
-    /**
-     * @brief 获取内存大小
-     */
-    class ZLMemory
-    {
-    public:
-        /**
-         * @brief 获取内存大小，以MB为单位
-         * @return 成功返回内存大小(MB)
-         */
-        static ULONG GetMemorySize()
-        {
-            MEMORYSTATUSEX statex = {0};
-            statex.dwLength = sizeof(statex);
-            ::GlobalMemoryStatusEx(&statex);
-            return (ULONG)((statex.ullTotalPhys) / (1024 * 1024));
-        }
-    };
 
-}
-}
+// #ifndef __ATLSTR_H__
+// #include "cstring.hpp"
+// #endif
+
+#include <atlstr.h>
+#include <assert.h>
+
+#include "z_http_def.h"
+
+
+///> libcurl
+#ifdef _DEBUG
+#pragma comment(lib, "libcurl_d.lib")
+#else
+#pragma comment(lib, "libcurl.lib")
+#endif
+#define CURL_STATICLIB
+#pragma comment(lib, "wldap32.lib")
+#pragma comment(lib, "ws2_32.lib")
+#pragma comment(lib, "winmm.lib")
+#include <libcurl/curl.h>
