@@ -26,6 +26,9 @@ windows下各种api调用和操作的封装
 z_http  
 使用curl，提供post、download（支持下载到文件和下载到内存）  
   
+z_log  
+一个win下的日志模块，单独线程、分级别、能动态改级别  
+  
   
 ZPublic项目地址
 ---------------
