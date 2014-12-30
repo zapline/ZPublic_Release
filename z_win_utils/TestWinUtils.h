@@ -47,6 +47,7 @@ public:
         TEST_ADD(CTestWinUtils::test_signer_info);
         TEST_ADD(CTestWinUtils::test_task_scheduler);
         TEST_ADD(CTestWinUtils::test_split_str);
+        TEST_ADD(CTestWinUtils::test_str_conv);
     }
 
     void test_path()
@@ -417,6 +418,15 @@ public:
         TEST_ASSERT(ZLMemory::GetMemorySize() != 0);
         TEST_ASSERT(ZLMemory::GetUsedMem() != 0);
         TEST_ASSERT(ZLDrive::GetDriveSize() != 0);
+        TEST_ASSERT(ZLSystemInfo::CreateGUID() != L"");
+        TEST_ASSERT(ZLSystemInfo::GetComputername() != L"");
+        TEST_ASSERT(ZLSystemInfo::GetComputerType() != emComputeType_Null);
+        TEST_ASSERT(ZLSystemInfo::GetComputerFullUsername() != L"");
+
+        WSADATA wsData;
+        ::WSAStartup(MAKEWORD(2,2), &wsData);
+        TEST_ASSERT(ZLSystemInfo::GetHostname() != L"");
+        ::WSACleanup();
     }
 
     void test_process()
@@ -892,5 +902,20 @@ public:
         TEST_ASSERT(vecResult[2] == L",z");
         TEST_ASSERT(vecResult[3] == L"public!");
         TEST_ASSERT(vecResult[4] == L"");
+    }
+
+    void test_str_conv()
+    {
+        // A2W
+        LPCSTR a = "哈哈,我是a";
+        TEST_ASSERT(ZLA2W(a)          == CA2W(a));
+        TEST_ASSERT(ZLA2W(a, CP_UTF8) == CA2W(a, CP_UTF8));
+        TEST_ASSERT(ZLA2W(a, CP_ACP)  == CA2W(a, CP_ACP));
+
+        // W2A
+        LPCWSTR w = L"呵呵,我是w";
+        TEST_ASSERT(ZLW2A(w)          == CW2A(w));
+        TEST_ASSERT(ZLW2A(w, CP_UTF8) == CW2A(w, CP_UTF8));
+        TEST_ASSERT(ZLW2A(w, CP_ACP)  == CW2A(w, CP_ACP));
     }
 };
